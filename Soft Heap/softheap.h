@@ -116,3 +116,22 @@ void meld(node *q)
 	toHead->prev = h;
 	fix_minlist(h);
 }
+
+void fix_minlist(head *h)
+{
+	head *tmpmin;
+
+	if (h->next == tail)
+		tmpmin = h;
+	else
+		tmpmin = h->next->suffix_min;
+
+	while (h != header)
+	{
+		if (h->queue->ckey < tmpmin->queue->ckey)
+			tmpmin = h;
+
+		h->suffix_min = tmpmin;
+		h = h->prev;
+	}
+}
