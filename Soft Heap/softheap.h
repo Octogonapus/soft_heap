@@ -48,6 +48,7 @@ void initialize()
 	tail->rank = INT_MAX;
 	header->next = tail;
 	tail->prev = header;
+	std::cout << "Enter r:\n" << std::endl;
 	std::cin >> r;
 }
 
@@ -72,5 +73,46 @@ void insert(int newKey)
 void meld(node *q)
 {
 	head *h, *prevHead, *toHead = header->next;
+	node *top, *bottom;
+	
+	while (q->rank > toHead->rank)
+		toHead = toHead->next;
 
+	prevHead = toHead->prev;
+
+	while (q->rank == toHead->rank)
+	{
+		if (toHead->queue->ckey > q->ckey)
+		{
+			top = q;
+			bottom = toHead->queue;
+		}
+		else
+		{
+			top = toHead->queue;
+			bottom = q;
+		}
+
+		q = new_node();
+		q->ckey = top->ckey;
+		q->rank = top->rank + 1;
+		q->child = bottom;
+		q->next = top;
+		q->il = top->il;
+		q->il_tail = top->il_tail;
+		toHead = toHead->next;
+	}
+
+	if (prevHead == toHead->prev)
+		h = new_head();
+	else
+		h = prevHead->next;
+
+	h->queue = q;
+	h->rank = q->rank;
+	h->prev = prevHead;
+	h->next = toHead;
+	prevHead->next = h;
+	toHead->prev = h;
+	fix_minlist(h);
 }
